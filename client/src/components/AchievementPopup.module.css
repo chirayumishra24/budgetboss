@@ -1,0 +1,48 @@
+.popup {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 24px;
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  border-radius: 14px;
+  box-shadow: 0 8px 40px rgba(76, 175, 80, 0.3), 0 0 20px rgba(76, 175, 80, 0.15);
+  z-index: 2000;
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4caf50, #81c784);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.label {
+  margin: 0;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--success);
+  font-weight: 600;
+}
+
+.badgeName {
+  margin: 2px 0 0;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(76, 175, 80, 0.5); }
+  50% { box-shadow: 0 0 30px rgba(76, 175, 80, 0.8); }
+}

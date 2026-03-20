@@ -1,0 +1,174 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.headerSection { text-align: center; }
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.statCard { text-align: center; }
+
+.statLabel {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+/* Time Machine */
+.timeMachineCard { width: 100%; }
+
+.timeMachineHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.yearBadge {
+  background: var(--accent);
+  color: #0a0f1e;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.slider {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.yearLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Stock Grid */
+.stockGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.stockCard {
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.stockCard:hover {
+  border-color: var(--border-glow);
+}
+
+.stockCardSelected {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.stockHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sparkline {
+  width: 100%;
+  height: 40px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.sparklineSvg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Buy Form */
+.buyForm {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.buyField label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.selectInput {
+  width: 100%;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-family: var(--font-main);
+}
+
+.selectInput option {
+  background: #1e293b;
+  color: #f1f5f9;
+  padding: 8px;
+}
+
+.selectInput:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+/* Preview Card */
+.previewCard {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+/* Investment Rows */
+.investmentRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  transition: opacity 0.3s;
+}
+
+.investmentRow:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Dividend alert */
+.dividendAlert {
+  margin-top: 12px;
+  padding: 10px 16px;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid var(--success);
+  border-radius: var(--radius-md);
+  color: var(--success);
+  font-weight: 600;
+  text-align: center;
+}

@@ -1,0 +1,45 @@
+.ticker {
+  width: 100%;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.9);
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+  padding: 8px 0;
+  position: relative;
+}
+
+.ticker::before,
+.ticker::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 2;
+}
+.ticker::before {
+  left: 0;
+  background: linear-gradient(90deg, #0f172a, transparent);
+}
+.ticker::after {
+  right: 0;
+  background: linear-gradient(270deg, #0f172a, transparent);
+}
+
+.tickerContent {
+  display: flex;
+  gap: 48px;
+  white-space: nowrap;
+  animation: scroll 60s linear infinite;
+}
+
+.headline {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

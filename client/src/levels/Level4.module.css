@@ -1,0 +1,244 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: background-color 0.5s ease;
+}
+
+.container.redTint {
+  background-color: rgba(239, 68, 68, 0.04);
+  border-radius: var(--radius-lg);
+}
+
+/* ─── Tab Bar ──────────────────────────── */
+.tabBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.tab {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tab:hover { border-color: var(--border-glow); }
+
+.tabActive {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(167, 139, 250, 0.1));
+  border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 20px var(--accent-glow);
+}
+
+/* ─── Stock Tabs ───────────────────────── */
+.stockTabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 12px;
+  overflow-x: auto;
+}
+
+.stockTab {
+  padding: 10px 16px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-bottom: 3px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 100px;
+  color: var(--text-primary);
+}
+
+.stockTab:hover {
+  background: var(--bg-glass-hover);
+}
+
+.stockTabActive {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-glow);
+}
+
+.stockTabSymbol {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.stockTabPrice {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ─── Chart ────────────────────────────── */
+.chartArea {
+  position: relative;
+  width: 100%;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+  background: var(--bg-glass);
+}
+
+.chart { width: 100%; }
+
+.priceOverlay {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stockLabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.livePrice {
+  font-size: 1.3rem;
+  font-weight: 800;
+  text-shadow: 0 0 10px currentColor;
+}
+
+.liveDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* ─── Controls ─────────────────────────── */
+.controlPanel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.leverageSection { margin-bottom: 16px; }
+
+.leverageSlider {
+  width: 100%;
+  margin: 8px 0 0;
+  accent-color: var(--accent);
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.buttons button { flex: 1; font-size: 1rem; padding: 14px; }
+
+.statsRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-top: 1px solid var(--border-glass);
+  padding-top: 12px;
+}
+
+.miniStat { text-align: center; }
+.miniStat p { margin: 0; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary); }
+.miniStat h4 { margin: 2px 0 0; font-size: 1.1rem; }
+
+.positionCard { display: flex; flex-direction: column; }
+
+.positionDetails {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pnlBlock {
+  text-align: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-md);
+}
+
+/* ─── Portfolio Tab ────────────────────── */
+.portfolioSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.summaryCard { text-align: center; }
+.summaryLabel {
+  margin: 0 0 4px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-secondary);
+}
+
+/* ─── Holdings Table ───────────────────── */
+.holdingsTable {
+  width: 100%;
+}
+
+.tableHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 1.2fr;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.tableRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1.5fr 1.2fr;
+  gap: 8px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  align-items: center;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.tableRow:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* ─── Margin Call ──────────────────────── */
+.marginCall {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(239, 68, 68, 0.95);
+  color: white;
+  text-align: center;
+  padding: 32px;
+  z-index: 5000;
+}
+
+.marginCall h1 { font-size: 2.5rem; text-shadow: 0 0 40px rgba(0, 0, 0, 0.5); }

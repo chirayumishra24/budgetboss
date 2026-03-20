@@ -1,0 +1,17 @@
+.meter {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pulse {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
