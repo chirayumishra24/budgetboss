@@ -78,12 +78,12 @@ export const Level2 = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerSection}>
+      <div className={styles.headerSection} id="level-header-2">
         <h2>Level 2: The Plumbing</h2>
         <p>See the machinery behind every stock trade. Watch your order flow through OMS → Exchange → CDSL Vault.</p>
       </div>
 
-      <GlassCard className={styles.tradingDesk}>
+      <GlassCard className={styles.tradingDesk} id="trading-desk">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div style={{ fontSize: '2.5rem' }}>🏢</div>
           <div>
@@ -102,7 +102,7 @@ export const Level2 = () => {
       </GlassCard>
 
       {/* Pipeline */}
-      <div className={styles.pipeline}>
+      <div className={styles.pipeline} id="pipeline-stages">
         {STAGES.map((stage, i) => {
           const state = getStageState(stage.key);
           return (
@@ -161,7 +161,7 @@ export const Level2 = () => {
 
       {/* T+1 Timer */}
       {countdown !== null && (
-        <GlassCard style={{ textAlign: 'center', marginTop: '16px' }}>
+        <GlassCard style={{ textAlign: 'center', marginTop: '16px' }} id="settlement-card">
           <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>T+1 SETTLEMENT</p>
           <h2 className="accent-text" style={{ margin: '4px 0' }}>⏱️ {countdown}h remaining</h2>
         </GlassCard>

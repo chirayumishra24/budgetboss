@@ -137,7 +137,7 @@ export const Level3 = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerSection}>
+      <div className={styles.headerSection} id="level-header-3">
         <h2>Level 3: Wealth Builder</h2>
         <p>Pick stocks, choose your entry year and holding period, then scrub through time to watch growth.</p>
       </div>
@@ -163,7 +163,7 @@ export const Level3 = () => {
       </div>
 
       {/* Time Slider */}
-      <GlassCard className={styles.timeMachineCard}>
+      <GlassCard className={styles.timeMachineCard} id="time-machine-card">
         <div className={styles.timeMachineHeader}>
           <h3>Time Machine</h3>
           <span className={styles.yearBadge}>{viewYear}</span>
@@ -183,7 +183,7 @@ export const Level3 = () => {
 
       {/* Stock Picker */}
       <h3 style={{ margin: '20px 0 12px' }}>Select a Stock to Invest</h3>
-      <div className={styles.stockGrid}>
+      <div className={styles.stockGrid} id="stock-picker-grid">
         {MOCK_STOCKS.map(stock => {
           const currentPrice = PRICES[stock.name][viewYear];
           const priceChange = currentPrice - stock.basePrice;

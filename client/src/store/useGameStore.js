@@ -22,6 +22,7 @@ export const useGameStore = create((set, get) => ({
   isShaking: false,
   emotionalState: 'calm', // calm, stressed, panic
   gameOver: false,
+  tutorialsCompleted: savedState?.tutorialsCompleted || [],
 
   // Player Profile
   badges: savedState?.badges || [],
@@ -63,6 +64,7 @@ export const useGameStore = create((set, get) => ({
         needs: state.needs,
         wants: state.wants,
         investments: state.investments,
+        tutorialsCompleted: state.tutorialsCompleted,
       }));
     } catch (error) {
       console.error("Error saving game:", error);
@@ -134,6 +136,7 @@ export const useGameStore = create((set, get) => ({
       investments: 0, creditScore: 750, holdings: [], portfolioValue: 0,
       gameOver: false, emotionalState: 'calm', badges: [], streak: 0,
       totalEarnings: 0, mentorMessage: null, pendingAchievement: null,
+      tutorialsCompleted: [],
     });
     get().saveGame();
   },
@@ -148,6 +151,22 @@ export const useGameStore = create((set, get) => ({
         return {
           walletBalance: state.walletBalance - amount,
           [category]: state[category] + amount,
+        };
+      }
+      return state;
+    });
+    if (changed) get().saveGame();
+  },
+
+  deallocateFunds: (category, amount) => {
+    let changed = false;
+    set((state) => {
+      if (state[category] >= amount) {
+        sounds.click();
+        changed = true;
+        return {
+          walletBalance: state.walletBalance + amount,
+          [category]: state[category] - amount,
         };
       }
       return state;
@@ -216,5 +235,13 @@ export const useGameStore = create((set, get) => ({
       walletBalance: state.walletBalance + amount,
     }));
     get().saveGame();
+  },
+
+  completeTutorial: (level) => {
+    const { tutorialsCompleted } = get();
+    if (!tutorialsCompleted.includes(level)) {
+      set({ tutorialsCompleted: [...tutorialsCompleted, level] });
+      get().saveGame();
+    }
   },
 }));

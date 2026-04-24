@@ -19,7 +19,7 @@ export const Level4 = () => {
   const {
     walletBalance, triggerShake, addXp, updateWallet, holdings,
     setEmotionalState, unlockBadge, setMentorMessage,
-    triggerGameOver, incrementStreak, playerName,
+    triggerGameOver, incrementStreak, playerName, resetGame
   } = useGameStore();
 
   const chartContainerRef = useRef();
@@ -44,6 +44,7 @@ export const Level4 = () => {
   const [wins, setWins] = useState(0);
   const [redTint, setRedTint] = useState(false);
   const [closedTrades, setClosedTrades] = useState([]);
+  const [showFinalReport, setShowFinalReport] = useState(false);
 
   const heartbeatRef = useRef(null);
   const tickIntervalRef = useRef(null);
@@ -277,6 +278,18 @@ export const Level4 = () => {
     generatePortfolioPDF(portfolioData);
   };
 
+  const handleFinish = () => {
+    sounds.success();
+    setShowFinalReport(true);
+  };
+
+  const handleRestart = () => {
+    if (window.confirm("Ready to start a new financial journey? This will reset all progress.")) {
+      resetGame();
+      window.location.reload();
+    }
+  };
+
   // Calculate portfolio data — simulate drift for Level 3 stocks not in live price feed
   const portfolioHoldings = holdings.map(h => {
     let cp;
@@ -298,7 +311,7 @@ export const Level4 = () => {
   return (
     <div className={`${styles.container} ${redTint ? styles.redTint : ''}`}>
       {/* Tab Switcher */}
-      <div className={styles.tabBar}>
+      <div className={styles.tabBar} id="tab-switcher">
         <button
           className={`${styles.tab} ${activeTab === 'trading' ? styles.tabActive : ''}`}
           onClick={() => { setActiveTab('trading'); sounds.click(); }}
@@ -335,7 +348,7 @@ export const Level4 = () => {
       {activeTab === 'trading' && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
           {/* Stock Tabs */}
-          <div className={styles.stockTabs}>
+          <div className={styles.stockTabs} id="stock-tabs">
             {TRADEABLE_STOCKS.map(stock => (
               <button
                 key={stock.symbol}
@@ -352,7 +365,7 @@ export const Level4 = () => {
           </div>
 
           {/* Chart */}
-          <div className={styles.chartArea}>
+          <div className={styles.chartArea} id="chart-area">
             <div ref={chartContainerRef} className={styles.chart} />
             <div className={styles.priceOverlay}>
               <span className={styles.stockLabel}>{activeStock.name}</span>
@@ -365,7 +378,7 @@ export const Level4 = () => {
 
           {/* Controls */}
           <div className={styles.controlPanel}>
-            <GlassCard className={styles.tradingCard}>
+            <GlassCard className={styles.tradingCard} id="trading-controls">
               <h3 style={{ margin: '0 0 12px' }}>Trade {activeStock.symbol}</h3>
               <div className={styles.leverageSection}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -399,7 +412,7 @@ export const Level4 = () => {
               </div>
             </GlassCard>
 
-            <GlassCard className={styles.positionCard}>
+            <GlassCard className={styles.positionCard} id="active-position-card">
               <h3 style={{ marginBottom: '12px' }}>Active Position</h3>
               {position ? (
                 <div>
@@ -538,6 +551,57 @@ export const Level4 = () => {
           )}
         </motion.div>
       )}
+
+      {/* Final Report Modal */}
+      <AnimatePresence>
+        {showFinalReport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={styles.modalOverlay}
+          >
+            <GlassCard className={styles.reportCard}>
+              <h1 className="accent-text">Simulation Complete!</h1>
+              <p>Congratulations, {playerName}. You've navigated the complexities of the financial world.</p>
+              
+              <div className={styles.finalStats}>
+                <div className={styles.finalStat}>
+                  <p>Final Wealth</p>
+                  <h2>Rs.{totalPortfolioValue.toLocaleString('en-IN')}</h2>
+                </div>
+                <div className={styles.finalStat}>
+                  <p>Total Trades</p>
+                  <h2>{totalTrades}</h2>
+                </div>
+                <div className={styles.finalStat}>
+                  <p>Win Rate</p>
+                  <h2>{totalTrades > 0 ? ((wins / totalTrades) * 100).toFixed(0) : 0}%</h2>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                <button className="btn btn-primary" onClick={handleExportPDF} style={{ flex: 1 }}>
+                  Download Final Report
+                </button>
+                <button className="btn btn-success" onClick={handleRestart} style={{ flex: 1 }}>
+                  Restart Simulation
+                </button>
+              </div>
+              <button className="btn" onClick={() => setShowFinalReport(false)} style={{ marginTop: '12px', width: '100%' }}>
+                Continue Trading
+              </button>
+            </GlassCard>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer Actions */}
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '32px' }}>
+        <button className="btn btn-success" onClick={handleFinish} style={{ padding: '12px 32px' }}>
+          🏁 Finish Simulation & See Results
+        </button>
+      </div>
     </div>
   );
 };

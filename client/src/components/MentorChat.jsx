@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styles from './MentorChat.module.css';
+import { Tooltip } from './Tooltip';
+import { FINANCIAL_TERMS } from '../utils/financialTerms';
 
 const FAQ = [
   { keywords: ['sip', 'systematic'], answer: 'A SIP (Systematic Investment Plan) lets you invest a fixed amount regularly in mutual funds. It averages out market volatility through rupee cost averaging — one of the safest ways to build wealth over time.' },
@@ -19,6 +21,30 @@ const FAQ = [
 ];
 
 export const MentorChat = ({ isOpen, onClose }) => {
+  const formatTextWithTooltips = (text) => {
+    if (!text) return text;
+    const terms = Object.keys(FINANCIAL_TERMS);
+    const regex = new RegExp(`(${terms.join('|')})`, 'gi');
+    const parts = text.split(regex);
+    
+    return parts.map((part, i) => {
+      const termKey = terms.find(t => t.toLowerCase() === part.toLowerCase());
+      if (termKey) {
+        return (
+          <Tooltip key={i} text={FINANCIAL_TERMS[termKey]}>
+            <span style={{ 
+              color: 'var(--accent)', 
+              fontWeight: 700, 
+              borderBottom: '1px dashed var(--accent)', 
+              cursor: 'help' 
+            }}>{part}</span>
+          </Tooltip>
+        );
+      }
+      return part;
+    });
+  };
+
   const [messages, setMessages] = useState([
     { role: 'mentor', text: 'Hello! I\'m Arjun, your finance mentor. Ask me anything about investing, trading, or personal finance.' },
   ]);
@@ -78,7 +104,7 @@ export const MentorChat = ({ isOpen, onClose }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            {msg.text}
+            {msg.role === 'mentor' ? formatTextWithTooltips(msg.text) : msg.text}
           </motion.div>
         ))}
         <div ref={chatEndRef} />

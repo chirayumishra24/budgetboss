@@ -140,6 +140,49 @@
   accent-color: var(--accent);
 }
 
+.danger {
+  color: var(--danger);
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(10, 15, 30, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.reportCard {
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  padding: 40px;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.finalStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 32px 0;
+}
+
+.finalStat p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.finalStat h2 {
+  font-size: 1.25rem;
+  color: #fff;
+  margin: 8px 0 0;
+}
+
 .buttons {
   display: flex;
   gap: 12px;

@@ -14,7 +14,7 @@ const CATEGORY_META = {
 export const Level1 = () => {
   const {
     walletBalance, needs, wants, investments, income,
-    allocateFunds, penalizeCreditScore, addXp, completeLevel1,
+    allocateFunds, deallocateFunds, penalizeCreditScore, addXp, completeLevel1,
     unlockBadge, setMentorMessage, setEmotionalState, incrementStreak,
     playerName,
   } = useGameStore();
@@ -104,7 +104,7 @@ export const Level1 = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.headerSection}>
+      <div className={styles.headerSection} id="level-header">
         <h2>Level 1: Cash Flow Engine</h2>
         <p>Allocate ₹{income.toLocaleString('en-IN')} using the 50/30/20 rule. Drag the coin or click a category.</p>
       </div>
@@ -124,7 +124,7 @@ export const Level1 = () => {
 
       <div className={styles.dashboard}>
         {/* Wallet */}
-        <GlassCard className={styles.walletCard}>
+        <GlassCard className={styles.walletCard} id="wallet-card">
           <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Remaining</p>
           <motion.h1
             key={walletBalance}
@@ -164,14 +164,14 @@ export const Level1 = () => {
         </GlassCard>
 
         {/* Categories */}
-        <div className={styles.categories}>
+        <div className={styles.categories} id="budget-categories">
           {Object.entries(CATEGORY_META).map(([key, meta]) => {
             const value = key === 'needs' ? needs : key === 'wants' ? wants : investments;
             const pct = allocationPcts[key];
             const isOver = key === 'wants' && pct > 30;
 
             return (
-              <GlassCard key={key} className={styles.categoryCard}>
+              <GlassCard key={key} className={styles.categoryCard} id={`category-${key}`}>
                 <div
                   className={styles.dropZone}
                   onDrop={(e) => handleDrop(e, key)}
@@ -204,6 +204,23 @@ export const Level1 = () => {
                       }}
                     />
                   </div>
+
+                  <div className={styles.categoryActions} onClick={(e) => e.stopPropagation()}>
+                    <button 
+                      className={styles.actionBtn} 
+                      onClick={() => deallocateFunds(key, dragAmount)}
+                      disabled={value < dragAmount}
+                    >
+                      −
+                    </button>
+                    <button 
+                      className={styles.actionBtn} 
+                      onClick={() => allocateFunds(key, dragAmount)}
+                      disabled={walletBalance < dragAmount}
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </GlassCard>
             );
@@ -221,7 +238,7 @@ export const Level1 = () => {
         </h2>
       </GlassCard>
 
-      <div className={styles.footer}>
+      <div className={styles.footer} id="complete-btn">
         <button
           className="btn btn-success"
           onClick={handleComplete}

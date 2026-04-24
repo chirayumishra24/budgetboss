@@ -33,7 +33,8 @@ export const DailyChallenge = ({ onReward, onClose }) => {
     const winIndex = Math.floor(Math.random() * REWARDS.length);
     const extraRotations = 360 * 5;
     const segmentAngle = 360 / REWARDS.length;
-    const targetAngle = extraRotations + (360 - winIndex * segmentAngle - segmentAngle / 2);
+    // 270 degrees is the top position where the pointer is
+    const targetAngle = extraRotations + (270 - (winIndex * segmentAngle + segmentAngle / 2));
 
     setRotation(targetAngle);
 

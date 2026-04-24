@@ -10,6 +10,7 @@ import { Quiz } from './components/Quiz';
 import { Leaderboard } from './components/Leaderboard';
 import { DailyChallenge } from './components/DailyChallenge';
 import { MentorChat } from './components/MentorChat';
+import { TutorialOverlay } from './components/TutorialOverlay';
 import { Level1 } from './levels/Level1';
 import { Level2 } from './levels/Level2';
 import { Level3 } from './levels/Level3';
@@ -24,7 +25,7 @@ function App() {
     mentorMessage, dismissMentor,
     pendingAchievement, clearAchievement, resetGame,
     walletBalance, addXp, updateWallet,
-    playerName, setPlayerName,
+    playerName, setPlayerName, tutorialsCompleted, completeTutorial,
   } = useGameStore();
 
   const [showNameModal, setShowNameModal] = useState(!playerName);
@@ -35,6 +36,9 @@ function App() {
   const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showDailyChallenge, setShowDailyChallenge] = useState(false);
   const [showMentorChat, setShowMentorChat] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(false);
+  const [walletChange, setWalletChange] = useState(null);
+  const [prevWallet, setPrevWallet] = useState(walletBalance);
 
   const handleNameSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +47,10 @@ function App() {
     setPlayerName(trimmed);
     setShowNameModal(false);
     setShowIntro(true);
-    setTimeout(() => setShowIntro(false), 3500);
+    setTimeout(() => {
+      setShowIntro(false);
+      if (!tutorialsCompleted.includes(level)) setShowTutorial(true);
+    }, 3500);
   };
 
   // Show daily challenge on first load if not spun today
@@ -53,7 +60,23 @@ function App() {
     if (lastSpin !== today) {
       setTimeout(() => setShowDailyChallenge(true), 4500);
     }
-  }, []);
+    
+    // Show tutorial if level changed and not completed
+    if (playerName && !tutorialsCompleted.includes(level)) {
+      setShowTutorial(true);
+    }
+  }, [level, playerName, tutorialsCompleted]);
+
+  // Wallet change animation
+  useEffect(() => {
+    const diff = walletBalance - prevWallet;
+    if (diff !== 0) {
+      setWalletChange(diff);
+      setPrevWallet(walletBalance);
+      const timer = setTimeout(() => setWalletChange(null), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [walletBalance, prevWallet]);
 
   // Quiz gate: trigger quiz when level changes (except level 1)
   const handleLevelComplete = (nextLevel) => {
@@ -95,6 +118,30 @@ function App() {
     2: 'The Plumbing',
     3: 'Wealth Builder',
     4: 'The Pit',
+  };
+
+  const tutorials = {
+    1: [
+      { title: "Managing Cash Flow", description: `Welcome ${playerName}, you just got your first paycheck of Rs. 50,000. Your goal is to allocate it according to the 50/30/20 rule.`, targetId: "level-header" },
+      { title: "The 50/30/20 Rule", description: "50% for Needs (Rent, Food), 30% for Wants (Shopping, Fun), and 20% for Investments.", targetId: "budget-categories" },
+      { title: "How to Allocate", description: "Drag the 🪙 coin into a category, or use the + and - buttons to adjust your budget.", targetId: "wallet-card" },
+      { title: "Wants Warning", description: "Keep 'Wants' below 30% or your Credit Score will suffer. Financial stress affects your performance!", targetId: "category-wants" }
+    ],
+    2: [
+      { title: "The Plumbing", description: "Ever wondered what happens after you click 'Buy' on a stock app?", targetId: "level-header-2" },
+      { title: "Order Lifecycle", description: "Your order goes to the OMS, then the Exchange, and finally settles in the CDSL Vault.", targetId: "pipeline-stages" },
+      { title: "T+1 Settlement", description: "In India, shares officially become yours on the next business day via T+1 Settlement. Watch it happen!", targetId: "settlement-card" }
+    ],
+    3: [
+      { title: "Wealth Builder", description: "Welcome to the Time Machine. Pick stocks and see how they performed over the last 10 years.", targetId: "level-header-3" },
+      { title: "Long Term Investing", description: "Choose an Entry Year and a Holding Period. Real wealth is built by holding quality companies over time.", targetId: "stock-picker-grid" },
+      { title: "Dividends", description: "Quality companies pay you a share of their profits through Dividends. Watch your wallet grow!", targetId: "time-machine-card" }
+    ],
+    4: [
+      { title: "The Pit", description: "This is live trading. You can switch between different stocks and track your P&L in real-time.", targetId: "stock-tabs" },
+      { title: "Leverage", description: "You can trade with up to 5x your balance using Leverage. It multiplies your gains, but also your losses!", targetId: "trading-controls" },
+      { title: "Margin Call", description: "If your losses exceed your balance, you'll face a Margin Call and risk Liquidation!", targetId: "tab-switcher" }
+    ]
   };
 
   return (
@@ -262,12 +309,24 @@ function App() {
       </AnimatePresence>
 
       {/* Overlays */}
-      <Mentor message={mentorMessage} onDismiss={dismissMentor} />
+      {!showTutorial && <Mentor message={mentorMessage} onDismiss={dismissMentor} />}
       <AchievementPopup badge={pendingAchievement} onComplete={clearAchievement} />
       {showLeaderboard && <Leaderboard onClose={() => setShowLeaderboard(false)} />}
       {showDailyChallenge && <DailyChallenge onReward={handleDailyReward} onClose={() => setShowDailyChallenge(false)} />}
       <AnimatePresence>
         <MentorChat isOpen={showMentorChat} onClose={() => setShowMentorChat(false)} />
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showTutorial && tutorials[level] && (
+          <TutorialOverlay 
+            steps={tutorials[level]} 
+            onComplete={() => {
+              setShowTutorial(false);
+              completeTutorial(level);
+            }} 
+          />
+        )}
       </AnimatePresence>
 
       {/* News Ticker */}
@@ -308,6 +367,18 @@ function App() {
             <button className="btn" onClick={() => setShowMentorChat(c => !c)} style={{ padding: '8px 12px', fontSize: '0.8rem' }}>
               Ask Arjun
             </button>
+            <button 
+              className="btn" 
+              onClick={() => {
+                if(window.confirm("Are you sure you want to reset your entire progress?")) {
+                  resetGame();
+                  window.location.reload();
+                }
+              }} 
+              style={{ padding: '8px 12px', fontSize: '0.8rem', borderColor: 'var(--danger)', color: 'var(--danger)' }}
+            >
+              Reset
+            </button>
 
             <div style={{ textAlign: 'right' }}>
               <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Credit</p>
@@ -315,11 +386,32 @@ function App() {
                 {creditScore}
               </h3>
             </div>
-            <div style={{ textAlign: 'right' }}>
+            <div id="global-wallet" style={{ textAlign: 'right', position: 'relative' }}>
               <p style={{ margin: 0, fontSize: '0.7rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Wallet</p>
               <h3 style={{ margin: 0 }} className="accent-text">
                 Rs.{walletBalance.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
               </h3>
+              
+              <AnimatePresence>
+                {walletChange && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, x: 20 }}
+                    animate={{ opacity: 1, y: -20, x: 20 }}
+                    exit={{ opacity: 0 }}
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                      fontWeight: 800,
+                      color: walletChange > 0 ? 'var(--success)' : 'var(--danger)',
+                      fontSize: '0.9rem',
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    {walletChange > 0 ? '+' : ''}{walletChange.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </header>
